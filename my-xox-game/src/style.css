@@ -1,0 +1,24 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.game{
+    height: 130px;
+    border: 1px solid;
+    font-size: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.game:hover{
+    background-color: #f2f2f2;
+}
+
+.game-row{
+    width: 80%;
+}
