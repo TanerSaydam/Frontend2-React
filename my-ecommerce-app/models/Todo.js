@@ -1,6 +1,6 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
-const todoSchema = new mongoose.Schema({
+const todoSchema = new mongoose.Schema({    
     work: String,
     isCompleted: Boolean,
     date: Date
