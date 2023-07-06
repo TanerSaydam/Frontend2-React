@@ -14,12 +14,40 @@ body{
   background-color: #f2f2f2;
 }
 
-.login-link{
+.login-link, .register-link{
   float: right;
   text-decoration: none;
   color: black;
 }
 
-.login-link:hover{
+.login-link:hover, .register-link:hover{
   color: blue;
+}
+
+ol.breadcrumb{
+  float: right;
+}
+
+.nav-logo{
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  margin-right: 5px;  
+}
+
+a{
+  cursor: pointer;
+}
+
+.product-logo{
+  width: 80px;
+}
+
+.product-img{
+  width: 20px;
+}
+
+.product-img-div{
+  border: 1px solid;
+  padding: 2px;   
 }
