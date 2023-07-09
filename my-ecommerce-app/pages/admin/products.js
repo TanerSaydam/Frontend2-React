@@ -1,5 +1,7 @@
 import withAdminLayout from '@/components/withAdminLayout'
+import trCurrency from '@/services/trCurreny';
 import axios from 'axios';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 
@@ -8,62 +10,23 @@ function Products() {
     const router = useRouter();
 
     useEffect(() => {
-        if(localStorage.getItem("seller")){
+        if (localStorage.getItem("seller")) {
             getAll();
-        }else{
+        } else {
             router.push("/admin/login");
         }
-    },[]);
+    }, []);
 
     async function getAll() {
         const seller = JSON.parse(localStorage.getItem("seller"));
 
         const result = await axios.post("/api/admin/products/getAll", { sellerId: seller._id })
         setProducts(result.data);
-    }
+    }    
 
-    function trCurrency(value = 0, symbol = ""){
-        if (value == 0) {            
-            return "0,00 " + symbol;
-          }
-      
-          let isValueNegative = false;
-          if(value < 0){
-            isValueNegative = true;
-            value *= -1;
-          }
-      
-          let money = value.toString().split(".")
-          let newMoney = "";
-          let lira = money[0];
-          let penny = "00";
-          if (money.length > 1) {
-            penny = money[1]
-            if (penny.length == 1) {
-              penny = penny + "0"
-            }
-      
-            if (penny.length > 1) {
-              penny = penny.substring(0,2);
-            }
-          }
-      
-          let count = 0;
-          for (let i = lira.length; i > 0; i--) {      
-            if (count == 3 && count < (lira.length)) {
-              newMoney = lira[i-1] + "." + newMoney 
-              count = 1;
-            }else{
-              newMoney = lira[i-1] + newMoney
-              count++;
-            }
-          }
-          newMoney = `${newMoney},${penny} ${symbol}`;
-      
-          if(isValueNegative){
-            newMoney = "-" + newMoney;
-          }    
-          return newMoney;
+    async function changeStatus(_id){
+        await axios.post("/api/admin/products/changeStatus", {_id: _id});
+        getAll();
     }
 
     return (
@@ -73,9 +36,9 @@ function Products() {
             <div className='form-group'>
                 <div className='row'>
                     <div className='col-lg-8 col-md-8 col-3'>
-                        <button className='btn btn-outline-primary'>
+                        <Link href="/admin/product-add" className='btn btn-outline-primary'>
                             <i className='fa fa-plus'></i>
-                        </button>
+                        </Link>
                     </div>
                     <div className='col-lg-4 col-md-4 col-9'>
                         <input type='search' className='form-control' placeholder='Aranacak değer...' />
@@ -89,8 +52,10 @@ function Products() {
                             <th>#</th>
                             <th>Ürün Resmi</th>
                             <th>Ürün Adı</th>
+                            <th>Kategori</th>
                             <th>Satış Fiyatı</th>
                             <th>Stok Adedi</th>
+                            <th>Sat.Dur.Değiştir</th>
                             <th>İşlemler</th>
                         </tr>
                     </thead>
@@ -101,21 +66,31 @@ function Products() {
                                     <td>{index + 1}</td>
                                     <td className='text-center'>
                                         <img className='product-logo' src={val.mainImageUrl} />
-                                        <div className='row m-1'>
-                                            {val.imageUrls.map((p,i)=> {
-                                                return(
-                                                    <div key={i} className='col-3 mx-auto product-img-div'>
-                                                        <img className='product-img' src={p}/>
-                                                    </div>
-                                                )
-                                            })}
-                                            
-                                        </div>
+                                        {
+                                            (val.imageUrls.length > 0 && val.imageUrls[0] !== "") 
+                                            ? <div className='row m-1'>
+                                                {val.imageUrls.map((p, i) => {
+                                                    return (
+                                                        <div key={i} className='col-3 mx-auto product-img-div'>
+                                                            <img className='product-img' src={p} />
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div> 
+                                            : <span></span>
+                                        }
+
                                     </td>
                                     <td>
                                         {val.name}</td>
+                                    <td>{val.categories[0].name}</td>
                                     <td>{trCurrency(val.price, "₺")}</td>
                                     <td>{val.stock}</td>
+                                    <td className='text-center'>{val.isActive ?
+                                        <button onClick={()=> changeStatus(val._id)} className='btn btn-outline-danger btn-sm' title="Satıştan Kaldır">
+                                            Kaldır <i className='fa fa-x mx-1'></i></button> :
+                                        <button onClick={()=> changeStatus(val._id)} className='btn btn-outline-info btn-sm' title="Satışa Al">
+                                            Ekle<i className='fa fa-check mx-1'></i></button>}</td>
                                     <td>
                                         <button className='btn btn-outline-warning btn-sm m-1' title="Güncelle">
                                             <i className='fa fa-edit'></i>

@@ -64,7 +64,6 @@ export default function register() {
         }
     }
 
-
     return (
         <div className="container">
             <div className='card mt-5'>

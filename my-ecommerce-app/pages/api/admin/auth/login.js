@@ -12,7 +12,7 @@ export default function handle(req,res){
         if(checkEmail == null){
             res.status(401).json({message: "Yazdığınız mail sistemde kayıtlı değil!"})
         }else{
-            const checkPassword = await Seller.findOne({password: password});
+            const checkPassword = await Seller.findOne({email: email,password: password});
             if(checkPassword == null){
                 res.status(401).json({message: "Şifreniz yanlış!"})
             }else{

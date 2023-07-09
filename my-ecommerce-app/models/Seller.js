@@ -9,7 +9,8 @@ const sellerSchema = new mongoose.Schema({
     email: String,
     phoneNumber: String,
     password: String,
-    imageUrl: String
+    imageUrl: String,
+    isAdmin: Boolean
 });
 
 export default mongoose.models.Seller || mongoose.model("Seller",sellerSchema);

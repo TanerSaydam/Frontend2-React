@@ -7,7 +7,9 @@ const productSchema = new mongoose.Schema({
     stock: Number,
     sellerId: String,
     imageUrls: Array,
-    mainImageUrl: String
+    mainImageUrl: String,
+    categoryId: String,
+    isActive: Boolean
 });
 
 export default mongoose.models.Product || mongoose.model("Product", productSchema);

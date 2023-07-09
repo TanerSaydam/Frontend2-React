@@ -5,9 +5,11 @@ export default function AdminNavbar(props) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">
+                    <Link className="navbar-brand" href="/admin">
+                        <h3>
                         Satıcı Paneli
-                    </a>
+                        </h3>
+                    </Link>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -21,6 +23,11 @@ export default function AdminNavbar(props) {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li className="nav-item">
+                                <Link href="/" className="nav-link active" aria-current="page">
+                                    Kullanıcı Arayüzü
+                                </Link>
+                            </li>
                             <li className="nav-item">
                                 <Link href="/admin/products" className="nav-link active" aria-current="page">
                                     Ürünler
@@ -63,6 +70,6 @@ export default function AdminNavbar(props) {
                             </div>
                     </div>
                 </div>
-            </nav>
+    </nav>
   )
 }
