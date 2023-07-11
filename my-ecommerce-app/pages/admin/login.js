@@ -39,8 +39,8 @@ export default function login() {
     if (isValid) {
       axios.post("/api/admin/auth/login", inputs)
         .then((res) => {
-          localStorage.setItem("accessToken",JSON.stringify(res.data.token));
-          localStorage.setItem("seller",JSON.stringify(res.data.seller));          
+          localStorage.setItem("accessToken",JSON.stringify(res.data.accessToken));
+          localStorage.setItem("seller",JSON.stringify(res.data.seller));
           router.push("/admin/");
         })
         .catch((err) => {

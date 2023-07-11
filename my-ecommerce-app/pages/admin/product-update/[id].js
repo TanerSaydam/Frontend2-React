@@ -3,13 +3,26 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
 
-function ProductAdd() {
+function ProductUpdate() {
     const [categories, setCategories] = useState([]);
     const [inputs, setInputs] = useState({ imageUrls: [""], isActive: true, sellerId: "" });
     const elRefs = useRef([]);
     const [isValid, setIsValid] = useState(false);
-    const router = useRouter();
+    const router = useRouter();    
 
+    useEffect(() => {
+        if (router.isReady) {
+            getCategories();
+            getProductById();
+        }       
+    }, [router.isReady]);
+
+    async function getProductById(){
+        const {id} = router.query;
+        const result = await axios.post("/api/admin/products/getById", {id: id});
+        setInputs(result.data);
+    }
+    
     async function getCategories() {
         const result = await axios("/api/admin/categories/getAll");
         setCategories(result.data);
@@ -44,9 +57,8 @@ function ProductAdd() {
         }
     }
 
-    async function save() {
+    async function update() {
         if (isValid) {
-
             if(inputs["categoryId"] === "0" || inputs["categoryId"] === null || inputs["categoryId"] === undefined){
                 elRefs.current["categoryId"].classList.add("is-invalid");
                 elRefs.current["categoryId"].classList.remove("is-valid");
@@ -56,7 +68,8 @@ function ProductAdd() {
             inputs["price"] = inputs["price"].toString().replace(",",".");
             const seller = JSON.parse(localStorage.getItem("seller"));
             inputs["sellerId"] = seller._id;
-            await axios.post("/api/admin/products/add", inputs);
+            console.log(inputs);
+            await axios.post("/api/admin/products/update", inputs);
             router.push("/admin/products");
         } else {
             for (let key in elRefs.current) {
@@ -68,9 +81,7 @@ function ProductAdd() {
         }
     }
 
-    useEffect(() => {
-        getCategories();
-    }, []);
+    
 
     function removeImageField(index) {
         const newImageFileds = inputs["imageUrls"].filter((p, i) => i !== index);
@@ -78,7 +89,7 @@ function ProductAdd() {
     }
 
     function setImageFieldValue(e, index) {
-        const newImageFileds = inputs["imageUrls"].map((val, i) => {
+        const newImageFileds = inputs["imageUrls"]?.map((val, i) => {
             if (i === index) return e.target.value
             else return val
         });
@@ -205,7 +216,7 @@ function ProductAdd() {
                 </div>
             </div> */}
             {
-                inputs["imageUrls"].map((val, index) => {
+                inputs["imageUrls"]?.map((val, index) => {
                     return (
                         <div key={index} className='form-group mt-2'>
                             <label>Ürün Resmi
@@ -229,13 +240,13 @@ function ProductAdd() {
                 </button>
             </div>
             <div className='form-group mt-2'>
-                <button onClick={save} className='btn btn-primary w-100'>
-                    <i className='fa-solid fa-save'></i>
-                    Kaydet
+                <button onClick={update} className='btn btn-info w-100'>
+                    <i className='fa-solid fa-check'></i>
+                    Güncelle
                 </button>
             </div>
         </>
     )
 }
 
-export default withAdminLayout(ProductAdd);
+export default withAdminLayout(ProductUpdate);

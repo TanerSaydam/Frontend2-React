@@ -145,14 +145,14 @@ function Todo(){
                                             className='btn btn-outline-info btn-sm' 
                                             title='İptal Et'
                                             onClick={()=> changeStatus(val)}>
-                                            <i className='fa fa-x'></i>
+                                            <i className='fa-solid fa-x'></i>
                                         </button>
                                 }else{
                                     return  <button 
                                             className='btn btn-outline-success btn-sm' 
                                             title='Tamamla'
                                             onClick={()=> changeStatus(val)}>
-                                            <i className='fa fa-check'></i>
+                                            <i className='fa-solid fa-check'></i>
                                         </button>  
                                 }
                             }
@@ -169,7 +169,7 @@ function Todo(){
                                             className='btn btn-outline-danger btn-sm mx-1' 
                                             title='Sil'
                                             onClick={()=> remove(val)}>
-                                            <i className='fa fa-trash'></i>
+                                            <i className='fa-solid fa-trash'></i>
                                         </button>
                                     </td>
                                 </tr>

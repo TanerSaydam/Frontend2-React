@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 
 function Products() {
     const [products, setProducts] = useState([]);
+    const [orgProducts, setOrgProducts] = useState([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -22,11 +23,36 @@ function Products() {
 
         const result = await axios.post("/api/admin/products/getAll", { sellerId: seller._id })
         setProducts(result.data);
+        setOrgProducts(result.data);
     }    
 
     async function changeStatus(_id){
         await axios.post("/api/admin/products/changeStatus", {_id: _id});
         getAll();
+    }
+
+    function search(e){
+        let search = e.target.value;
+        search = search.toString().replace(",",".");
+
+        const newProducts = orgProducts.filter((p)=> 
+            p.name.toLowerCase().includes(search) ||
+            p.categories[0].name.toLowerCase().includes(search) ||
+            p.stock === +search ||
+            p.price === +search);
+        setProducts(newProducts);
+    }
+
+    function cancel(){
+        setProducts(orgProducts);
+    }
+
+    async function remove(name,_id){
+        const result = window.confirm(`${name} ürününü silmek istiyor musunuz?`)
+        if(result){
+            await axios.post("/api/admin/products/remove", {_id: _id});
+            getAll();
+        }        
     }
 
     return (
@@ -37,11 +63,11 @@ function Products() {
                 <div className='row'>
                     <div className='col-lg-8 col-md-8 col-3'>
                         <Link href="/admin/product-add" className='btn btn-outline-primary'>
-                            <i className='fa fa-plus'></i>
+                            <i className='fa-solid fa-plus'></i>
                         </Link>
                     </div>
                     <div className='col-lg-4 col-md-4 col-9'>
-                        <input type='search' className='form-control' placeholder='Aranacak değer...' />
+                        <input onChange={search} type='search' className='form-control' placeholder='Aranacak değer...' />
                     </div>
                 </div>
             </div>
@@ -53,8 +79,8 @@ function Products() {
                             <th>Ürün Resmi</th>
                             <th>Ürün Adı</th>
                             <th>Kategori</th>
-                            <th>Satış Fiyatı</th>
                             <th>Stok Adedi</th>
+                            <th>Satış Fiyatı</th>
                             <th>Sat.Dur.Değiştir</th>
                             <th>İşlemler</th>
                         </tr>
@@ -83,20 +109,20 @@ function Products() {
                                     </td>
                                     <td>
                                         {val.name}</td>
-                                    <td>{val.categories[0].name}</td>
-                                    <td>{trCurrency(val.price, "₺")}</td>
+                                    <td>{val.categories[0]?.name}</td>
                                     <td>{val.stock}</td>
+                                    <td>{trCurrency(val.price, "₺")}</td>
                                     <td className='text-center'>{val.isActive ?
                                         <button onClick={()=> changeStatus(val._id)} className='btn btn-outline-danger btn-sm' title="Satıştan Kaldır">
-                                            Kaldır <i className='fa fa-x mx-1'></i></button> :
+                                            Kaldır <i className='fa-solid fa-x mx-1'></i></button> :
                                         <button onClick={()=> changeStatus(val._id)} className='btn btn-outline-info btn-sm' title="Satışa Al">
-                                            Ekle<i className='fa fa-check mx-1'></i></button>}</td>
+                                            Ekle<i className='fa-solid fa-check mx-1'></i></button>}</td>
                                     <td>
-                                        <button className='btn btn-outline-warning btn-sm m-1' title="Güncelle">
-                                            <i className='fa fa-edit'></i>
-                                        </button>
-                                        <button className='btn btn-outline-danger btn-sm m-1' title="Sil">
-                                            <i className='fa fa-trash'></i>
+                                        <Link href={"/admin/product-update/" + val._id} className='btn btn-outline-warning btn-sm m-1' title="Güncelle">
+                                            <i className='fa-solid fa-edit'></i>
+                                        </Link>
+                                        <button onClick={()=> remove(val.name, val._id)} className='btn btn-outline-danger btn-sm m-1' title="Sil">
+                                            <i className='fa-solid fa-trash'></i>
                                         </button>
                                     </td>
                                 </tr>

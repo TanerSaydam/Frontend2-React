@@ -44,12 +44,14 @@ a{
 }
 
 .product-img{
-  width: 20px;
+  width: 100%;
 }
 
 .product-img-div{
   border: 1px solid;
-  padding: 2px;   
+  padding: 2px;  
+  width: 20px; 
+  margin-top: 2px;
 }
 
 .card-product-title{
@@ -59,6 +61,7 @@ a{
 
 .card-product-img{
   object-fit: contain;
+  height: 200px;
 }
 
 .ui-categories ul{
@@ -77,3 +80,16 @@ a{
 .ui-categories ul li:hover, .ui-categories ul li.active{
   background-color: aquamarine;
 }
+
+.product-detail-main-img{
+  width: 100%;  
+}
+
+.product-details-img{
+  max-width: 100px;
+  height: 100px;
+}
+
+/* .product-detail-main-img-div{
+  max-height: 500px;
+} */

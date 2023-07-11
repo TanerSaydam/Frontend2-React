@@ -5,7 +5,7 @@ function UILayout({ children }) {
         <div className="container">
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <Link className="navbar-brand" href="/admin">
+                    <Link className="navbar-brand" href="/">
                         <i className="fa fa-home mx-1"></i>
                         Ana Sayfa
                     </Link>

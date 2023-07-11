@@ -6,13 +6,22 @@ import withUILayout from '@/components/withUILayout'
 
 function Home() {
   const [products, setProducts] = useState([]); //undefined
+  const [orgProducts, setOrgProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("0");
+  const [filterType,setFilterTpye] = useState("");
   const elRefs = useRef([]);
 
-  async function getAllProducts(categoryId = "0") {
-    const result = await axios.post("/api/ui/products/getAll", {categoryId: categoryId});
+  async function getAllProducts(categoryId = "0", selectedFilterType = "") {
+    const result = await axios.post("/api/ui/products/getAll", {categoryId: categoryId, filterType: selectedFilterType});
     setProducts(result.data);
+    setOrgProducts(result.data);
+  }
+
+  function search(e){
+    const value = e.target.value;
+    const newProducsts = orgProducts.filter((p)=> p.name.toLowerCase().includes(value));
+    setProducts(newProducsts);
   }
 
   async function getAllCategories(){
@@ -22,7 +31,8 @@ function Home() {
 
   function selectCategory(categoryId,i){
     clearActiveClassFromCategoryLi();
-    getAllProducts(categoryId);
+    getAllProducts(categoryId, filterType);
+    setSelectedCategoryId(categoryId);
     elRefs.current["category-" + i].className = "active";
   }
 
@@ -39,6 +49,11 @@ function Home() {
     getAllProducts();
   }, [])
 
+  function changeFilterType(e){
+    setFilterTpye(e.target.value);
+    getAllProducts(selectedCategoryId,e.target.value);
+  }
+
   return (
     <div className="container">
       <h1>e-Ticaret Ana Sayfa</h1>
@@ -50,16 +65,37 @@ function Home() {
               ref={(ref)=> elRefs.current["category--1"] = ref} 
               onClick={()=> selectCategory("0",-1)} 
               className="active">
+                <span className="badge text-bg-danger mx-1">
+                      {products.length}
+                </span>
                 Tümü
             </li>
-            {categories.map((val,i)=> <li ref={(ref)=> elRefs.current["category-" + i] = ref} key={i} onClick={()=> selectCategory(val._id,i)}><span className="badge text-bg-danger mx-1">{val.products.length}</span>{val.name}</li>)}
+            {categories.map((val,i)=> 
+                <li 
+                  ref={(ref)=> elRefs.current["category-" + i] = ref} 
+                  key={i} 
+                  onClick={()=> selectCategory(val._id,i)}>
+                    <span className="badge text-bg-danger mx-1">
+                      {val.products.length}
+                    </span>
+                    {val.name}
+                </li>)}
           </ul>
         </div>
         <div className="col-lg-9 col-md-9 col-12">
           <div className="row">
-            <div className="col-12">
-              <input className="form-control" type="search" placeholder="Aranacak değer..."/>
+            <div className="col-9">
+              <input className="form-control" onChange={search} type="search" placeholder="Aranacak değer..."/>
             </div>
+            <div className="col-3">
+              <select value={filterType} onChange={changeFilterType} className="form-control">
+                <option value="">Seçim Yapınız...</option>
+                <option value="0">Fiyata Göre Artan</option>
+                <option value="1">Fiyata Göre Azalan</option>
+                <option value="2">En Çok Beğenilen</option>
+                <option value="3">En Çok Yorum Alan</option>
+              </select>
+            </div>            
           </div>
           <div className="row">
             {products.map((val, i) => {
@@ -69,9 +105,10 @@ function Home() {
                     <img src={val.mainImageUrl} className="card-img-top card-product-img" alt="..." />
                     <div className="card-body">
                       <h5 className="card-title card-product-title">{val.name}</h5>
+                      <hr/>                      
                       <p className="card-text">Adet: {val.stock}</p>
                       <p className="card-text">Fiyat: {trCurrency(val.price, "₺")}</p>
-                      <Link href="#" className="btn btn-danger">Ürün Detayı</Link>
+                      <Link href={"/product-detail/" + val._id} className="btn btn-danger">Ürün Detayı</Link>
                     </div>
                   </div>
                 </div>
