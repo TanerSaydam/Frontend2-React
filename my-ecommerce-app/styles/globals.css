@@ -81,7 +81,7 @@ a{
   background-color: aquamarine;
 }
 
-.product-detail-main-img{
+.product-detail-main-img{ 
   width: 100%;  
 }
 
@@ -90,6 +90,15 @@ a{
   height: 100px;
 }
 
-/* .product-detail-main-img-div{
-  max-height: 500px;
-} */
+.shopping-cart{
+  text-decoration: none;
+  color: gray;
+}
+
+.shopping-cart:hover{
+  color: #0D6EFD;
+}
+
+.ui-profile:hover{
+  color: #0D6EFD;
+}

@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
     _id: String,
@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema({
     price: Number,
     stock: Number,
     sellerId: String,
-    imageUrls: Array,
+    imageUrls: Array,    
     mainImageUrl: String,
     categoryId: String,
     isActive: Boolean

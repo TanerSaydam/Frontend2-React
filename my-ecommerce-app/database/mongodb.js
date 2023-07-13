@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; //npm i mongoose
 
 const connection = {};
 const uri = "mongodb+srv://tahir:1@eticaretdb.24vlokn.mongodb.net/";

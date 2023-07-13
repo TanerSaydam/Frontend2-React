@@ -15,6 +15,14 @@ function ProductAdd() {
         setCategories(result.data);
     }
 
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    useEffect(()=> {
+        checkValidations();
+    },[inputs]);
+
     function handleChange(e) {
         const name = e.target.name;
         const value = e.target.value;
@@ -28,8 +36,6 @@ function ProductAdd() {
             e.target.classList.remove("is-invalid");
             e.target.classList.add("is-valid");
         }
-
-        checkValidations();
     }
 
     function checkValidations() {
@@ -68,9 +74,7 @@ function ProductAdd() {
         }
     }
 
-    useEffect(() => {
-        getCategories();
-    }, []);
+  
 
     function removeImageField(index) {
         const newImageFileds = inputs["imageUrls"].filter((p, i) => i !== index);

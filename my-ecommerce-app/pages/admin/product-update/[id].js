@@ -17,6 +17,10 @@ function ProductUpdate() {
         }       
     }, [router.isReady]);
 
+    useEffect(()=> {
+        checkValidations();
+    },[inputs]);
+
     async function getProductById(){
         const {id} = router.query;
         const result = await axios.post("/api/admin/products/getById", {id: id});
@@ -41,8 +45,6 @@ function ProductUpdate() {
             e.target.classList.remove("is-invalid");
             e.target.classList.add("is-valid");
         }
-
-        checkValidations();
     }
 
     function checkValidations() {
@@ -79,21 +81,19 @@ function ProductUpdate() {
                 }
             }
         }
-    }
-
-    
+    }    
 
     function removeImageField(index) {
         const newImageFileds = inputs["imageUrls"].filter((p, i) => i !== index);
         setInputs(prev => ({ ...prev, ["imageUrls"]: newImageFileds }));
     }
-
+       
     function setImageFieldValue(e, index) {
         const newImageFileds = inputs["imageUrls"]?.map((val, i) => {
             if (i === index) return e.target.value
             else return val
         });
-        setInputs(prev => ({ ...prev, ["imageUrls"]: newImageFileds }));
+        setInputs(prev => ({ ...prev, ["imageUrls"]: newImageFileds }));        
     }
 
     function addNewImageField() {
