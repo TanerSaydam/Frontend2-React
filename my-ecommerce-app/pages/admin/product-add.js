@@ -195,15 +195,15 @@ function ProductAdd() {
                 </div>
             </div>
             {/* <div className='form-group mt-2'>
-                <div class="form-check">
+                <div className="form-check">
                     <input 
-                        class="form-check-input" 
+                        className="form-check-input" 
                         type="checkbox"
                         id="isActive"
                         name="isActive"
                         onChange={handleChange}
                          />
-                        <label class="form-check-label" for="isActive">
+                        <label className="form-check-label" for="isActive">
                             Ürün Satışta Mı?
                         </label>
                 </div>

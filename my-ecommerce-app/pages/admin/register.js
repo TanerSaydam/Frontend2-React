@@ -1,7 +1,7 @@
 import { cityList } from '@/services/cityList'
 import axios from 'axios';
 import Link from 'next/link';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 
 export default function register() {
@@ -10,6 +10,10 @@ export default function register() {
     const elRefs = useRef([]);
     const [isValid, setIsValid] = useState(false);
     const router = useRouter();
+
+    useEffect(()=> {
+        checkValidations();
+    },[inputs]);
 
     const handleChange = (e) => {
         const name = e.target.name;
@@ -23,12 +27,8 @@ export default function register() {
         } else {
             e.target.classList.remove("is-invalid");
             e.target.classList.add("is-valid");
-        }
-
-        checkValidations();
+        }        
     }
-
-
 
     function checkValidations() {
         if (elRefs.current["name"]?.validity.valid &&

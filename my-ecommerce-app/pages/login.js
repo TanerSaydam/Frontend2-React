@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
 import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from 'react-toastify';
 
 function login() {
     const [inputs, setInputs] = useState({});
@@ -45,9 +46,11 @@ function login() {
                 .then((res) => {                    
                     localStorage.setItem("user", JSON.stringify(res.data));
                     router.push("/");
+                    toast.success("Kullanıcı girişi başarılı!");
                 })
                 .catch((err) => {
                     console.log(err.response?.data?.message);
+                    toast.error(err.response?.data?.message);
                 });
         } else {
             for (let key in elRefs.current) {

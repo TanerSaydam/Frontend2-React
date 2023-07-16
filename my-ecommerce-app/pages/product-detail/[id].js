@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import trCurrency from "@/services/trCurreny";
+import { toast } from 'react-toastify';
 
 function ProductDetail() {
     const router = useRouter();
@@ -40,7 +41,8 @@ function ProductDetail() {
             quantity: quantity
         };
 
-        await axios.post("/api/ui/shoppingCarts/add", data);
+        const result = await axios.post("/api/ui/shoppingCarts/add", data);
+        toast.success(result.data.message);
         router.push("/");
     }
 
