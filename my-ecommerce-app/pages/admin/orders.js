@@ -3,9 +3,11 @@ import trCurrency from '@/services/trCurreny';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
+import moment from 'moment';
 
 function Orders() {
     const [orders, setOrders] = useState([]);
+    const [orgOrders, setOrgOrders] = useState([]);
     const [orderId,setOrderId] = useState("");
     const [trackingNumber, setTrackingNumber] = useState("");
     const trackingNumberRef = useRef();
@@ -18,6 +20,7 @@ function Orders() {
         const seller = JSON.parse(localStorage.getItem("seller"));
         const result = await axios.post("/api/admin/orders/getAll", { sellerId: seller._id });
         setOrders(result.data);
+        setOrgOrders(result.data);
     }
 
     async function accept(id) {
@@ -27,6 +30,16 @@ function Orders() {
             toast.success(response.data.message);
             getAll();
         }
+    }
+
+    function search(e){
+        const value = e.target.value;
+        const newOrders = orgOrders.filter(
+            p=> 
+                p.products.name.toLowerCase().includes(value.toLowerCase()) ||
+                p.status.toLowerCase().includes(value.toLowerCase()) ||
+                p.trackingNumber.toLowerCase().includes(value.toLowerCase()))
+        setOrders(newOrders);
     }
 
     async function reject(id) {
@@ -52,6 +65,8 @@ function Orders() {
             const response = await axios.post("/api/admin/orders/giveItToTheCargo", data);
             toast.success(response.data.message);
             getAll();
+            let closeBtn = document.getElementById("cargoModalCloseBtn");
+            closeBtn.click();
         }else{
             trackingNumberRef.current.classList.add("is-invalid");
             trackingNumberRef.current.classList.remove("is-valid");
@@ -70,6 +85,10 @@ function Orders() {
             e.target.classList.add("is-valid");
         }        
     }  
+
+    function convertDate(date){
+        return moment(date).format('DD.MM.YYYY HH:mm:ss');
+    }
 
     function checkStatus(order) {
         if (order.status === "Onay Bekliyor") {
@@ -116,7 +135,7 @@ function Orders() {
             <div className='row'>
                 <div className='col-lg-9 col-md-6 col-0'></div>
                 <div className='col-lg-3 col-md-6 col-12'>
-                    <input type="search" className='form-control' placeholder='Aranacak değer...'/>
+                    <input onChange={search} type="search" className='form-control' placeholder='Aranacak değer...'/>
                 </div>
             </div>
             <table className='table table-bordered table-hover mt-2'>
@@ -139,7 +158,7 @@ function Orders() {
                         return (
                             <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{val.date}</td>
+                                <td>{convertDate(val.date)}</td>
                                 <td>{val.users[0].name}</td>
                                 <td>{val.status}</td>
                                 <td>
@@ -181,6 +200,7 @@ function Orders() {
                                 className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
+                                id="cargoModalCloseBtn"
                             />
                         </div>
                         <div className="modal-body">

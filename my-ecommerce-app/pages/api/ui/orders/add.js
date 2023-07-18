@@ -40,7 +40,8 @@ export default function handle(req,res){
                     isCompleted: false,
                     isPaymentCompleted: true,
                     status: "Onay Bekliyor",
-                    isReject: false
+                    isReject: false,
+                    trackingNumber: ""
                 });
     
                 await order.save();

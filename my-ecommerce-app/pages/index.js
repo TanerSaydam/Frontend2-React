@@ -54,6 +54,20 @@ function Home() {
     getAllProducts(selectedCategoryId,e.target.value);
   }
 
+  function returnRateToStar(average){
+    const arr = [];
+    for(let x = 0; x<5 ;x ++){
+      if(x < average){
+        arr.push("text-warning");
+      }else{
+        arr.push("text-secondary");
+      }
+    }
+
+    return arr;
+}
+
+
   return (
     <div className="container">
       <h1>e-Ticaret Ana Sayfa</h1>
@@ -84,16 +98,24 @@ function Home() {
         </div>
         <div className="col-lg-9 col-md-9 col-12">
           <div className="row">
-            <div className="col-9">
+            <div className="col-6">
               <input className="form-control" onChange={search} type="search" placeholder="Aranacak değer..."/>
             </div>
             <div className="col-3">
               <select value={filterType} onChange={changeFilterType} className="form-control">
                 <option value="">Seçim Yapınız...</option>
+                <option value="1">1 yıldız üstü</option>
+                <option value="2">2 yıldız üstü</option>
+                <option value="3">3 yıldız üstü</option>
+                <option value="4">4 yıldız üstü</option>
+                <option value="5">5 yıldız</option>
+              </select>
+            </div>
+            <div className="col-3">
+              <select value={filterType} onChange={changeFilterType} className="form-control">
+                <option value="">Seçim Yapınız...</option>
                 <option value="0">Fiyata Göre Artan</option>
-                <option value="1">Fiyata Göre Azalan</option>
-                <option value="2">En Çok Beğenilen</option>
-                <option value="3">En Çok Yorum Alan</option>
+                <option value="1">Fiyata Göre Azalan</option>                
               </select>
             </div>            
           </div>
@@ -105,6 +127,9 @@ function Home() {
                     <img src={val.mainImageUrl} className="card-img-top card-product-img" alt="..." />
                     <div className="card-body">
                       <h5 className="card-title card-product-title">{val.name}</h5>
+                      {returnRateToStar(val.average).map((val,i)=> 
+                        <i key={i} className={"fa-solid fa-star " + val}></i>
+                      )}
                       <hr/>                      
                       <p className="card-text">Adet: {val.stock}</p>
                       <p className="card-text">Fiyat: {trCurrency(val.price, "₺")}</p>

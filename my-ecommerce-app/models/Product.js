@@ -9,7 +9,8 @@ const productSchema = new mongoose.Schema({
     imageUrls: Array,    
     mainImageUrl: String,
     categoryId: String,
-    isActive: Boolean
+    isActive: Boolean,
+    average: Number
 });
 
 export default mongoose.models.Product || mongoose.model("Product", productSchema);

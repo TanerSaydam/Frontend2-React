@@ -15,7 +15,7 @@ function AdminLayout({ children }) {
     },[])
 
     const logout = () =>{
-        localStorage.clear();
+        localStorage.removeItem("seller");
         router.push("/admin/login");
     }
 

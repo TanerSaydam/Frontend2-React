@@ -2,110 +2,42 @@ import dbConnect from "@/database/mongodb";
 import Product from "@/models/Product";
 import request from "@/services/request";
 
-export default function handle(req,res){
-    request(res, async()=>{
-        dbConnect();
-        const {categoryId, filterType} =req.body;
-        if(categoryId === "0"){
-            if(filterType === ""){
-                const products = await Product.aggregate([
-                    {
-                        $lookup: {
-                            from: "sellers",
-                            localField: "sellerId",
-                            foreignField: "_id",
-                            as: "sellers"
-                          }
-                    },
-                    {
-                        $match: {isActive: true}
-                    }
-                ]).sort({name: 1});                
-                res.json(products);
-            }else{
-                if(filterType === "0"){
-                    const products = await Product.aggregate([
-                        {
-                            $lookup: {
-                                from: "sellers",
-                                localField: "sellerId",
-                                foreignField: "_id",
-                                as: "sellers"
-                              }
-                        },
-                        {
-                            $match: {isActive: true}
-                        }
-                    ]).sort({price: 1});
-                    res.json(products); 
-                }else if(filterType === "1"){
-                    const products = await Product.aggregate([
-                        {
-                            $lookup: {
-                                from: "sellers",
-                                localField: "sellerId",
-                                foreignField: "_id",
-                                as: "sellers"
-                              }
-                        },
-                        {
-                            $match: {isActive: true}
-                        }
-                    ]).sort({name: -1});
-                    res.json(products); 
-                }
-            }            
-        }
-        else{
-            if(filterType === ""){
-                const products = await Product.aggregate([
-                    {
-                        $lookup: {
-                            from: "sellers",
-                            localField: "sellerId",
-                            foreignField: "_id",
-                            as: "sellers"
-                          }
-                    },
-                    {
-                        $match: {isActive: true, categoryId: categoryId}
-                    }
-                ]).sort({name: 1});               
-                res.json(products);
-            }else{
-                if(filterType === "0"){
-                    const products = await Product.aggregate([
-                        {
-                            $lookup: {
-                                from: "sellers",
-                                localField: "sellerId",
-                                foreignField: "_id",
-                                as: "sellers"
-                              }
-                        },
-                        {
-                            $match: {isActive: true, categoryId: categoryId}
-                        }
-                    ]).sort({price: 1}); 
-                res.json(products);
-                }else if(filterType === "1"){
-                    const products = await Product.aggregate([
-                        {
-                            $lookup: {
-                                from: "sellers",
-                                localField: "sellerId",
-                                foreignField: "_id",
-                                as: "sellers"
-                              }
-                        },
-                        {
-                            $match: {isActive: true, categoryId: categoryId}
-                        }
-                    ]).sort({price: -1}); 
-                res.json(products); 
-                }
+const getAggregateQuery = (categoryId = "", sort = { name: 1 }) => {
+    const matchQuery = categoryId !== "0" ? { isActive: true, categoryId: categoryId } : { isActive: true };
+
+    return [
+        {
+            $lookup: {
+                from: "sellers",
+                localField: "sellerId",
+                foreignField: "_id",
+                as: "sellers"
             }
-            
+        },       
+        {
+            $match: matchQuery
         }
-    })
+    ];
+};
+
+const getSort = filterType => {
+    switch (filterType) {
+        case "0":
+            return { price: 1 };
+        case "1":
+            return { name: -1 };
+        default:
+            return { name: 1 };
+    }
+};
+
+export default function handle(req, res) {
+    request(res, async () => {
+        dbConnect();
+        const { categoryId, filterType } = req.body;
+        const sort = getSort(filterType);
+        const products = await Product.aggregate(getAggregateQuery(categoryId, sort)).sort(sort);
+
+        res.json(products);
+    });
 }
