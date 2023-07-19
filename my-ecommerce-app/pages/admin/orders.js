@@ -8,7 +8,7 @@ import moment from 'moment';
 function Orders() {
     const [orders, setOrders] = useState([]);
     const [orgOrders, setOrgOrders] = useState([]);
-    const [orderId,setOrderId] = useState("");
+    const [orderId, setOrderId] = useState("");
     const [trackingNumber, setTrackingNumber] = useState("");
     const trackingNumberRef = useRef();
 
@@ -32,10 +32,10 @@ function Orders() {
         }
     }
 
-    function search(e){
+    function search(e) {
         const value = e.target.value;
         const newOrders = orgOrders.filter(
-            p=> 
+            p =>
                 p.products.name.toLowerCase().includes(value.toLowerCase()) ||
                 p.status.toLowerCase().includes(value.toLowerCase()) ||
                 p.trackingNumber.toLowerCase().includes(value.toLowerCase()))
@@ -51,29 +51,29 @@ function Orders() {
         }
     }
 
-    function setTheIdOfOrderToBeCargo(id){
+    function setTheIdOfOrderToBeCargo(id) {
         setOrderId(id);
     }
 
-    async function giveItToTheCargo(){        
-        if(trackingNumberRef.current.validity.valid){
+    async function giveItToTheCargo() {
+        if (trackingNumberRef.current.validity.valid) {
             const data = {
                 id: orderId,
                 trackingNumber: trackingNumber
             }
-    
+
             const response = await axios.post("/api/admin/orders/giveItToTheCargo", data);
             toast.success(response.data.message);
             getAll();
             let closeBtn = document.getElementById("cargoModalCloseBtn");
             closeBtn.click();
-        }else{
+        } else {
             trackingNumberRef.current.classList.add("is-invalid");
             trackingNumberRef.current.classList.remove("is-valid");
         }
-        
+
     }
-  
+
     const handleChange = (e) => {
         setTrackingNumber(e.target.value);
 
@@ -83,10 +83,10 @@ function Orders() {
         } else {
             e.target.classList.remove("is-invalid");
             e.target.classList.add("is-valid");
-        }        
-    }  
+        }
+    }
 
-    function convertDate(date){
+    function convertDate(date) {
         return moment(date).format('DD.MM.YYYY HH:mm:ss');
     }
 
@@ -98,7 +98,8 @@ function Orders() {
                         <i className='fa-solid fa-check'></i>
                         <span className='ms-1'>Onayla</span>
                     </button>
-                    <button onClick={() => reject(order._id)} className='btn btn-outline-danger btn-sm ms-1'>
+                    <br/>
+                    <button onClick={() => reject(order._id)} className='btn btn-outline-danger btn-sm mt-1'>
                         <i className='fa-solid fa-x'></i>
                         <span className='ms-1'>Reddet</span>
                     </button>
@@ -107,24 +108,25 @@ function Orders() {
         } else if (order.status === "Sipariş Onaylandı") {
             return (
                 <>
-                    <button data-bs-toggle="modal" data-bs-target="#cargoModal" onClick={()=> setTheIdOfOrderToBeCargo(order._id)} className='btn btn-outline-info btn-sm'>
+                    <button data-bs-toggle="modal" data-bs-target="#cargoModal" onClick={() => setTheIdOfOrderToBeCargo(order._id)} className='btn btn-outline-info btn-sm'>
                         <i class="fa-solid fa-truck"></i>
                         <span className='ms-1'>Kargoya Ver</span>
                     </button>
-                    <button onClick={() => reject(order._id)} className='btn btn-outline-danger btn-sm ms-1'>
+                    <br/>
+                    <button onClick={() => reject(order._id)} className='btn btn-outline-danger btn-sm mt-1'>
                         <i className='fa-solid fa-x'></i>
                         <span className='ms-1'>Reddet</span>
                     </button>
                 </>
             )
-        }else if(order.status === "Sipariş Reddedildi"){
+        } else if (order.status === "Sipariş Reddedildi") {
             return <></>
-        }else if(order.status === "Sipariş Kargoya Verildi"){
+        } else if (order.status === "Sipariş Kargoya Verildi") {
             return <b>Kargo Numarası: {order.trackingNumber}</b>
         }
-        else{
+        else {
             return <></>
-            
+
         }
     }
 
@@ -135,51 +137,51 @@ function Orders() {
             <div className='row'>
                 <div className='col-lg-9 col-md-6 col-0'></div>
                 <div className='col-lg-3 col-md-6 col-12'>
-                    <input onChange={search} type="search" className='form-control' placeholder='Aranacak değer...'/>
+                    <input onChange={search} type="search" className='form-control' placeholder='Aranacak değer...' />
                 </div>
             </div>
-            <table className='table table-bordered table-hover mt-2'>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Sipariş Tarihi</th>
-                        <th>Kullanıcı</th>
-                        <th>Sipariş Durumu</th>
-                        <th>Ürün Resmi</th>
-                        <th>Ürün Adı</th>
-                        <th>Sipariş Adedi</th>
-                        <th>Birim Fiyatı</th>
-                        <th>Toplam</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orders.map((val, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{convertDate(val.date)}</td>
-                                <td>{val.users[0].name}</td>
-                                <td>{val.status}</td>
-                                <td>
-                                    <img src={val.products.mainImageUrl} width={100} />
-                                </td>
-                                <td>{val.products.name}</td>
-                                <td>{val.quantity}</td>
-                                <td>{trCurrency(val.price, "₺")}</td>
-                                <td>{trCurrency(val.price * val.quantity, "₺")}</td>
-                                <td>
-                                    {
-                                        checkStatus(val)
-                                    }
-                                </td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-
-
+            <div className='overflow-auto'>
+                <table className='table table-bordered table-hover mt-2'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sipariş Tarihi</th>
+                            <th>Kullanıcı</th>
+                            <th>Sipariş Durumu</th>
+                            <th>Ürün Resmi</th>
+                            <th>Ürün Adı</th>
+                            <th>Sipariş Adedi</th>
+                            <th>Birim Fiyatı</th>
+                            <th>Toplam</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orders.map((val, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{convertDate(val.date)}</td>
+                                    <td>{val.users[0].name}</td>
+                                    <td>{val.status}</td>
+                                    <td>
+                                        <img src={val.products.mainImageUrl} width={100} />
+                                    </td>
+                                    <td>{val.products.name}</td>
+                                    <td>{val.quantity}</td>
+                                    <td>{trCurrency(val.price, "₺")}</td>
+                                    <td>{trCurrency(val.price * val.quantity, "₺")}</td>
+                                    <td>
+                                        {
+                                            checkStatus(val)
+                                        }
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
 
             {/* Kargo Modal */}
             <div
@@ -219,7 +221,7 @@ function Orders() {
                                 <div className='invalid-feedback'>
                                     Kargo takip numarası boş olamaz!
                                 </div>
-                            </div>                         
+                            </div>
 
                         </div>
                         <div className="modal-footer">

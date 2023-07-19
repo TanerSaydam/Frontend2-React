@@ -118,7 +118,7 @@ function shoppingCarts() {
                 shoppingCarts.length > 0 
                 ?
                 <div className='row'>
-                <div className='col-lg-9 col-md-9 col-12'>
+                <div className='col-lg-9 col-md-9 col-12 overflow-auto'>
                     <table className='table table-hover table-bordered'>
                         <thead>
                             <tr>

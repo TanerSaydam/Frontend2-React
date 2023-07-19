@@ -100,7 +100,8 @@ function Orders() {
             return(
                 <>
                 <b>Kargo Numarası: {order.trackingNumber}</b>
-                <button onClick={()=> checkOut(order._id)} className='btn btn-outline-danger'>Teslim al</button>
+                <br/>
+                <button onClick={()=> checkOut(order._id)} className='btn btn-outline-danger mt-1'>Teslim al</button>
                 </>
             )
         }else if(order.status === "Teslim Alındı"){
@@ -111,7 +112,8 @@ function Orders() {
                 return (
                     <>
                     <button className='btn btn-primary'>İade et</button>
-                    <button className='btn btn-success ms-1' data-bs-toggle="modal" data-bs-target="#commentModal" onClick={()=> openCommentModal(order)}>Yorum Yap</button>
+                    <br/>
+                    <button className='btn btn-success mt-1' data-bs-toggle="modal" data-bs-target="#commentModal" onClick={()=> openCommentModal(order)}>Yorum Yap</button>
                     </>
                 )
             }else{
@@ -136,7 +138,8 @@ function Orders() {
                     <input onChange={search} type="search" className='form-control' placeholder='Aranacak değer...'/>
                 </div>
             </div>
-            <table className='table table-bordered table-hover mt-2'>
+            <div className='overflow-auto'>
+            <table className='table table-bordered table-hover mt-2 '>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -176,6 +179,8 @@ function Orders() {
                     })}
                 </tbody>
             </table>
+            </div>
+            
 
 
 

@@ -71,7 +71,7 @@ function Products() {
                     </div>
                 </div>
             </div>
-            <div className='form-group mt-2'>
+            <div className='form-group mt-2 overflow-auto'>
                 <table className='table table-hover table-bordered overflow-x'>
                     <thead>
                         <tr>

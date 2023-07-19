@@ -104,7 +104,7 @@ function ProductUpdate() {
 
     return (
         <>
-            <h1>Ürün Ekleme</h1>
+            <h1>Ürün Güncelleme</h1>
             <hr />
             <div className='row'>
                 <div className='col-lg-5 col-md-6 col-12'>

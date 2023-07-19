@@ -41,11 +41,15 @@ function UILayout({ children }) {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
+                            {
+                                user !== undefined ? 
+                                (<li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" href="/orders">
                                     Siparişler
                                 </Link>
-                            </li>
+                                </li>)
+                                : <></>
+                            }                            
                             <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" href="/admin">
                                     Firma Girişi
